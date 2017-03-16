@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head_script %}
+
+{% endblock %}
+
+{% block title %}活動詳細資料{% endblock %}
+<link rel="stylesheet" href="{% static "plugins/datatables/dataTables.bootstrap.css" %}">
+<link rel="stylesheet" href="{% static "plugins/datatables/jquery.dataTables_themeroller.css" %}">
+<link rel="stylesheet" href="{% static "plugins/datatables/jquery.dataTables.min.css" %}">
+{% block active-list %} class="active"{% endblock %}
+
+{% block page-header %}{{ event.e_name }}{% endblock %}
+
+{% block page-header-desc %}活動詳細資料{% endblock %}
+
+
+{% block page-content %}
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box box-solid box-primary">
+      <div class="box-header">
+        <h3 class="box-title">{{ event.e_name }}</h3>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        <table id="event_list" class="table table-bordered table-hover">
+          <tbody>
+            <tr>
+              <td><b>活動名稱</b></td>
+              <td>{{ event.e_name }}</td>
+            </tr>
+            {% if event.e_organizer == username %}
+            <tr>
+              <td><b>主辦人</b></td>
+              <td><b style="color:red;">{{ event.e_organizer }}</b></td>
+            </tr>
+            {% else %}
+            <tr>
+              <td><b>主辦人</b></td>
+              <td>{{ event.e_organizer }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+              <td><b>活動開始日期</b></td>
+              <td>{{ event.e_startdate }}</td>
+            </tr>
+            <tr>
+              <td><b>活動結束日期</b></td>
+              <td>{{ event.e_enddate }}</td>
+            </tr>
+            <tr>
+              <td><b>報名截止日期</b></td>
+              <td>{{ event.e_deadline }}</td>
+            </tr>
+            <tr>
+              <td><b>地點</b></td>
+              <td>{{ event.e_place }}</td>
+            </tr>
+            <tr>
+              <td><b>活動描述</b></td>
+              <td>{{ event.e_description }}</td>
+            </tr>
+            <tr>
+              <td><b>發佈日期</b></td>
+              <td>{{ event.e_postdate }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          <div class="col-xs-3">
+            <form action="event_list" method="get">
+              <button type="submit" class="btn btn-primary btn-block">回到活動列表</button>
+            </form>
+          </div>
+          {% if status == 'participated' %}
+          <div class="col-xs-3 col-xs-offset-1">
+            <form action="quit_event" method="post">
+              {% csrf_token %}
+              {{ form.hidden_data }}
+              {{ form.eventid }}
+              <button type="submit" class="btn btn-warning btn-block">取消報名</button>
+            </form>
+          </div>
+          {% elif status == 'participated_disabled' %}
+          <div class="col-xs-3 col-xs-offset-1">
+            <form action="quit_event" method="post">
+              {% csrf_token %}
+              {{ form.hidden_data }}
+              {{ form.eventid }}
+              <button type="submit" class="btn btn-warning btn-block">只能取消截止日期前的活動</button>
+            </form>
+          </div>
+          {% elif status == 'owner' %}
+          <div class="col-xs-3 col-xs-offset-1">
+            <form action="remove_event" method="post">
+              {% csrf_token %}
+              {{ form.hidden_data }}
+              {{ form.eventid }}
+              <button type="submit" class="btn btn-danger btn-block">取消活動</button>
+            </form>
+          </div>
+          {% elif status == 'owner_disabled' or status == 'apply_disabled' %}
+          <div class="col-xs-3 col-xs-offset-1">
+              <button class="btn btn-danger disabled btn-block">活動已完結</button>
+          </div>
+          {% elif status == 'apply' %}
+          <div class="col-xs-3 col-xs-offset-1">
+            <form action="join_event" method="post">
+              {% csrf_token %}
+              {{ form.hidden_data }}
+              {{ form.eventid }}
+              <button type="submit" class="btn btn-success btn-block">報名參加</button>
+            </form>
+          </div>
+          {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block tail_script %}
+<script src="{% static "plugins/datatables/jquery.dataTables.min.js" %}"></script>
+<script src="{% static "plugins/datatables/dataTables.bootstrap.min.js" %}"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $('#event_list').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+  });
+</script>
+{% endblock %}

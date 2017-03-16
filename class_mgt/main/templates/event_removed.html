@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head_script %}
+<link rel="stylesheet" href="{% static "plugins/datatables/dataTables.bootstrap.css" %}">
+{% endblock %}
+
+{% block title %}取消活動{% endblock %}
+
+{% block active-joint %} class="active"{% endblock %}
+
+{% block page-header %}取消活動{% endblock %}
+
+{% block page-header-desc %}{% endblock %}
+
+{% block page-content %}
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box box-solid box-success">
+      <div class="box-header">
+        <h3 class="box-title">取消活動</h3>
+      </div>
+      <div class="box-body">
+        <p>
+          <h2>你已取消了活動：<b style="color: red;">{{ event_name }}</b></h2>
+        </p>
+        <div class="col-xs-3">
+          <form action="event_list" method="get">
+            <button type="submit" class="btn btn-primary btn-block">回到活動列表</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% block tail_script %}
+<script src="{% static "plugins/datatables/jquery.dataTables.min.js" %}"></script>
+<script src="{% static "plugins/datatables/dataTables.bootstrap.min.js" %}"></script>
+{% endblock %}

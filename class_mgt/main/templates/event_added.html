@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}活動發佈{% endblock %}
+
+{% block head_script %}
+{% endblock %}
+
+{% block page-header %}活動發佈{% endblock %}
+
+{% block page-header-desc %}
+{% endblock %}
+
+{% block location %}活動發佈{% endblock %}
+
+{% block page-content %}
+<div class="box box-success">
+  <div class="box-header with-border">
+    <h3 class="box-title">活動發佈</h3>
+  </div>
+  <div class="box-body">
+    <table>
+      <tr>
+        <td>你已成功發佈了新活動：<b style="color: green;">{{ event.e_name }}</b></td>
+      </tr>
+      <tr>
+        <td>活動詳情請<a href="/event_details?eventid={{ event.id }}"><b>按此</b></a></td>
+      </tr>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block tail_script %}
+{% endblock %}

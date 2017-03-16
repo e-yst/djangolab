@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}新增活動{% endblock %}
+
+{% block head_script %}
+<!-- daterange picker -->
+<link rel="stylesheet" href="{% static "plugins/datetimepicker/bootstrap-datetimepicker-4.17.37.min.css" %}">
+{% endblock %}
+
+{% block active-new %} class="active"{% endblock %}
+
+{% block page-header %}發佈新活動{% endblock %}
+
+{% block page-header-desc %}
+{% endblock %}
+
+{% block location %}新增活動{% endblock %}
+
+{% block page-content %}
+<div class="box box-solid box-primary">
+  <div class="box-header with-border">
+    <h3 class="box-title">活動詳細資料</h3>
+  </div>
+  <!-- /.box-header -->
+  <div class="box-body">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="{{ form.e_name.id_for_label }}">活動名稱</label>
+        {{ form.e_name }}
+        {% if form.e_name.errors %}
+          <b style="color: red;">{{ form.e_name.errors }}</b>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.e_place.id_for_label }}">地點</label>
+        {{ form.e_place }}
+        {% if form.e_place.errors %}
+          <b style="color: red;">{{ form.e_place.errors }}</b>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.e_deadline.id_for_label }}">報名截止日期</label>
+        {{ form.e_deadline }}
+        {% if form.e_deadline.errors %}
+          <b style="color: red;">{{ form.e_deadline.errors }}</b>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.e_startdate.id_for_label }}">活動開始</label>
+        {{ form.e_startdate }}
+        {% if form.e_startdate.errors %}
+          <b style="color: red;">{{ form.e_startdate.errors }}</b>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.e_enddate.id_for_label }}">活動結束</label>
+        {{ form.e_enddate }}
+        {% if form.e_enddate.errors %}
+          <b style="color: red;">{{ form.e_enddate.errors }}</b>
+        {% endif %}
+      </div>
+      <div class="form-group">
+        <label for="{{ form.e_description.id_for_label }}">活動簡介</label>
+        {{ form.e_description }}
+        {% if form.e_description.errors %}
+          <b style="color: red;">{{ form.e_description.errors }}</b>
+        {% endif %}
+      </div>
+      <div class="form-group row col-md-4 col-md-offset-4">
+        {% if errors %}
+          <b style="color: red;">請修正下列錯誤：</b>
+          {% for e in errors %}
+            <li><b style="color: red;">{{e}}</b></li>
+          {% endfor %}
+        {% endif %}
+        <button type="submit" class="btn btn-primary btn-block btn-flat">提交</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block tail_script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+<!-- Datetime Picker -->
+<script src="{% static "plugins/datetimepicker/collapse-3.3.6.js" %}"></script>
+<script src="{% static "plugins/datetimepicker/transition-3.3.6.js" %}"></script>
+<script src="{% static "plugins/datetimepicker/bootstrap-datetimepicker-4.17.37.min.js" %}"></script>
+<script type="text/javascript">
+  $(function () {
+    $('#{{ form.e_startdate.id_for_label }}').datetimepicker({
+        inline: true,
+        sideBySide: true,
+        format: 'YYYY/MM/DD h:mm A'
+    });
+    $('#{{ form.e_enddate.id_for_label }}').datetimepicker({
+        inline: true,
+        sideBySide: true,
+        format: 'YYYY/MM/DD h:mm A'
+    });
+    $('#{{ form.e_deadline.id_for_label }}').datetimepicker({
+        inline: true,
+        sideBySide: true,
+        format: 'YYYY/MM/DD h:mm A'
+    });
+  });
+</script>
+{% endblock %}

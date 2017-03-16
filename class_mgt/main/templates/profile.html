@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block head_script %}
+<link rel="stylesheet" href="{% static "plugins/datatables/dataTables.bootstrap.css" %}">
+{% endblock %}
+
+{% block title %}個人檔案{% endblock %}
+
+{% block active-list %} class="active"{% endblock %}
+
+{% block page-header %}
+{{ user.username }}
+{% endblock %}
+
+{% block page-header-desc %}個人檔案{% endblock %}
+
+{% block page-content %}
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box box-solid box-primary">
+      <div class="box-header">
+        <h3 class="box-title">個人資料</h3>
+      </div>
+      <div class="box-body">
+        <table id="p_stats" class="table table-bordered table-hover">
+          <tbody>
+            <tr>
+              <td><b>使用者名稱</b></td>
+              <td>{{ user.username }}</td>
+            </tr>
+            <tr>
+              <td><b>電子郵箱</b></td>
+              <td>{{ user.email }}</td>
+            </tr>
+            <tr>
+              <td><b>最後登入時間</b></td>
+              <td>{{ user.last_login }}</td>
+            </tr>
+            <tr>
+              <td><b>主辦活動總計</b></td>
+              <td>{{ event_hcount }}</td>
+            </tr>
+            <tr>
+              <td><b>參與活動總計</b></td>
+              <td>{{ event_pcount }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box box-solid box-danger">
+      <div class="box-header">
+        <h3 class="box-title">更改密碼</h3>
+      </div>
+      <div class="box-body">
+        <table id="reset_pwd" class="table table-bordered table-hover">
+          <tbody>
+            <form action="profile" method="post">
+              {% csrf_token %}
+              <tr>
+                <td>
+                  <label for="{{ form.current_pwd.id_for_label }}">目前密碼</label>
+                </td>
+                <td>
+                  {{ form.current_pwd }}
+                  {% if form.current_pwd.errors %}
+                  <b style="color: red;">{{ form.current_pwd.errors }}</b>
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label for="{{ form.new_pwd.id_for_label }}">新密碼</label>
+                </td>
+                <td>
+                  {{ form.new_pwd }}
+                  {% if form.new_pwd.errors %}
+                  <b style="color: red;">{{ form.new_pwd.errors }}</b>
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label for="{{ form.confirm_pwd.id_for_label }}">確認新密碼</label>
+                </td>
+                <td>
+                  {{ form.confirm_pwd }}
+                  {% if form.confirm_pwd.errors %}
+                  <b style="color: red;">{{ form.confirm_pwd.errors }}</b>
+                  {% endif %}
+                </td>
+              </tr>
+              <div class="col-xs-3 col-xs-offset-9">
+                <button type="submit" class="btn btn-primary btn-block btn-flat">提交</button>
+              </div>
+            </form>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box box-solid box-primary">
+      <div class="box-header">
+        <h3 class="box-title">主辦活動紀錄</h3>
+      </div>
+      <div class="box-body">
+        <table id="hlist" class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>活動名稱</th>
+              <th>活動開始時間</th>
+              <th>活動結束時間</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in event_hlist %}
+              <tr>
+                <td><a href="event_details?eventid={{item.id}}">{{ item.e_name }}</a></td>
+                <td>{{ item.e_startdate }}</td>
+                <td>{{ item.e_enddate }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>活動名稱</th>
+              <th>活動開始時間</th>
+              <th>活動結束時間</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div class="box box-solid box-primary">
+      <div class="box-header">
+        <h3 class="box-title">參與活動紀錄</h3>
+      </div>
+      <div class="box-body">
+        <table id="plist" class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th>活動名稱</th>
+              <th>活動開始時間</th>
+              <th>活動結束時間</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in event_plist %}
+              <tr>
+                <td><a href="event_details?eventid={{item.id}}">{{ item.e_name }}</a></td>
+                <td>{{ item.e_startdate }}</td>
+                <td>{{ item.e_enddate }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <th>活動名稱</th>
+              <th>活動開始時間</th>
+              <th>活動結束時間</th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block tail_script %}
+<script src="{% static "plugins/datatables/jquery.dataTables.min.js" %}"></script>
+<script src="{% static "plugins/datatables/dataTables.bootstrap.min.js" %}"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $('#hlist').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+    $('#plist').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+  });
+</script>
+{% endblock %}
